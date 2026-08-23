@@ -58,7 +58,7 @@ for f in $(find dev/ci/presubmits -type f | sort ); do
 cat >> ${REPO_ROOT}/.github/workflows/ci-presubmit.yaml <<EOF
 
   ${name}:
-    runs-on: ubuntu-latest
+    runs-on: \${{ fromJSON(((github.event_name == 'push' || github.event_name == 'schedule' || github.event_name == 'workflow_dispatch') && github.ref == format('refs/heads/{0}', github.event.repository.default_branch) && vars.NEXUS_RUNS_ON_LINUX) || '["ubuntu-26.04"]') }}
     timeout-minutes: 60
     steps:
       - uses: actions/checkout@v4
